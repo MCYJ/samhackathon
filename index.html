@@ -16,11 +16,12 @@
     const BASE_URL = "https://newsapi.org/";
     const ENDPOINT = "v2/everything";
     const API_KEY = "4debf998c9b64761bcfbfe9ca7997ef5"; // Replace with your API key
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
     // Function to fetch news articles
     async function fetchNews(query) {
       try {
-        const url = `${BASE_URL}${ENDPOINT}?q=${encodeURIComponent(query)}&apiKey=${API_KEY}`;
+        const url = `${proxyUrl}${BASE_URL}${ENDPOINT}?q=${encodeURIComponent(query)}&apiKey=${API_KEY}`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
