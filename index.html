@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News API Example</title>
+</head>
+<body>
+  <h1>News Search</h1>
+  <input type="text" id="query" placeholder="Search for news">
+  <button id="searchButton">Search</button>
+  <div id="results"></div>
+
+  <script>
+    // Base URL and endpoint for NewsAPI
+    const BASE_URL = "https://newsapi.org/";
+    const ENDPOINT = "v2/everything";
+    const API_KEY = "4debf998c9b64761bcfbfe9ca7997ef5"; // Replace with your API key
+
+    // Function to fetch news articles
+    async function fetchNews(query) {
+      try {
+        const url = `${BASE_URL}${ENDPOINT}?q=${encodeURIComponent(query)}&apiKey=${API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayResults(data.articles);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    }
+
+    // Function to display results on the page
+    function displayResults(articles) {
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = ""; // Clear previous results
+      if (articles.length === 0) {
+        resultsDiv.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      articles.forEach((article) => {
+        const articleDiv = document.createElement("div");
+        articleDiv.innerHTML = `
+          <h2>${article.title}</h2>
+          <p>${article.description || "No description available."}</p>
+          <a href="${article.url}" target="_blank">Read more</a>
+        `;
+        resultsDiv.appendChild(articleDiv);
+      });
+    }
+
+    // Event listener for search button
+    document.getElementById("searchButton").addEventListener("click", () => {
+      const query = document.getElementById("query").value;
+      if (query.trim() === "") {
+        alert("Please enter a search term.");
+        return;
+      }
+      fetchNews(query);
+    });
+  </script>
+</body>
+</html>
