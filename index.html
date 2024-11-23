@@ -13,7 +13,7 @@
   <div id="results"></div>
 
   <div id="myPlot"></div> 
-
+  <div id="chart"></div>
   <script>
     // Base URL and endpoint for NewsAPI
     const BASE_URL = "https://newsapi.org/";
@@ -61,7 +61,8 @@
         }
         )
         .then(data => {
-            console.log(data);
+            renderBarChart(data);
+            console.log(data["downloadsbyweeks"].map(item => item.download_count));
         })
 
     // Event listener for search button
@@ -74,54 +75,143 @@
       fetchNews(query);
     });
 
-    // Set Dimensions
-    const xSize = 500;
-    const ySize = 500;
-    const margin = 40;
-    const xMax = xSize - margin*2;
-    const yMax = ySize - margin*2;
+    // // Set Dimensions
+    // const xSize = 500;
+    // const ySize = 500;
+    // const margin = 40;
+    // const xMax = xSize - margin*2;
+    // const yMax = ySize - margin*2;
 
-    // Create Random Points
-    const numPoints = 100;
-    const data = [];
-    for (let i = 0; i < numPoints; i++) {
-    data.push([Math.random() * xMax, Math.random() * yMax]);
+    // // Create Random Points
+    // const numPoints = 100;
+    // const data = [];
+    // for (let i = 0; i < numPoints; i++) {
+    // data.push([Math.random() * xMax, Math.random() * yMax]);
+    // }
+
+    // // Append SVG Object to the Page
+    // const svg = d3.select("#myPlot")
+    // .append("svg")
+    // .attr("height", "1500px")
+    // .attr("width", "1500px")
+    // .append("g")
+    // .attr("transform","translate(" + margin + "," + margin + ")");
+
+    // // X Axis
+    // const x = d3.scaleLinear()
+    // .domain([0, 500])
+    // .range([0, xMax]);
+
+    // svg.append("g")
+    // .attr("transform", "translate(0," + yMax + ")")
+    // .call(d3.axisBottom(x));
+
+    // // Y Axis
+    // const y = d3.scaleLinear()
+    // .domain([0, 500])
+    // .range([ yMax, 0]);
+
+    // svg.append("g")
+    // .call(d3.axisLeft(y));
+
+    // // Dots
+    // svg.append('g')
+    // .selectAll("dot")
+    // .data(data).enter()
+    // .append("circle")
+    // .attr("cx", function (d) { return d[0] } )
+    // .attr("cy", function (d) { return d[1] } )
+    // .attr("r", 3)
+    // .style("fill", "Red");
+
+    function renderBarChart(rawdata) {
+        data = rawdata['downloadsbyweeks']
+
+        // Dimensions and margins
+        const margin = { top: 20, right: 30, bottom: 80, left: 50 };
+        const width = 900 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Add a title
+        svg.append("text")
+            .attr("x", (width + margin.left + margin.right) / 2) // Center horizontally
+            .attr("y", margin.top / 2) // Position above the chart
+            .attr("text-anchor", "middle") // Center text
+            .style("font-size", "16px") // Font size
+            .style("font-weight", "bold") // Font weight
+            .text("주차별 파일다운로드 현황"); // Title text
+
+        // X-axis scale
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.year_week))
+            .range([0, width])
+            .padding(0.1);
+
+        // Y-axis scale
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.download_count)])
+            .nice()
+            .range([height, 0]);
+
+        // Add X-axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text") // Select all text elements of the Y-axis
+            .style("text-anchor", "left") // Adjust text alignment
+            .attr("transform", "rotate(-90)") // Rotate the text by -90 degrees
+            .attr("dy", "-1em") // Adjust vertical alignment
+            .attr("dx", "-3em");
+
+        // Add Y-axis
+        svg.append("g")
+            .call(d3.axisLeft(y)); // Automatically adds Y-axis index
+            
+        // Generate a random main hue for the gradient effect
+        const mainHue = Math.random() * 360;
+
+        // Add bars
+        svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.year_week))
+            .attr("y", d => y(d.download_count))
+            .attr("width", x.bandwidth())
+            .attr("height", d => height - y(d.download_count))
+            .attr("fill", (d, i) => {
+            // Adjust lightness based on the index
+            const lightness = 50 + (i / data.length) * 30; // Gradual change from 50% to 80%
+            return `hsl(${mainHue}, 70%, ${lightness}%)`;
+        });
+
+        // Add value legends on bars
+        svg.selectAll(".value-text")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "value-text")
+            .attr("x", d => x(d.year_week) + x.bandwidth() / 2) // Center horizontally
+            .attr("y", d => y(d.download_count) - 10) // Position above the bar
+            .attr("transform", (d, i) => {
+                const xPosition = x(d.year_week) + x.bandwidth() / 2;
+                const yPosition = y(d.download_count) - 10;
+                return `rotate(-45, ${xPosition}, ${yPosition})`; // Rotate around the center
+            })
+            .text(d => d.download_count)
+            .style("text-anchor", "start"); // Adjust alignment
     }
+    
 
-    // Append SVG Object to the Page
-    const svg = d3.select("#myPlot")
-    .append("svg")
-    .attr("height", "1500px")
-    .attr("width", "1500px")
-    .append("g")
-    .attr("transform","translate(" + margin + "," + margin + ")");
-
-    // X Axis
-    const x = d3.scaleLinear()
-    .domain([0, 500])
-    .range([0, xMax]);
-
-    svg.append("g")
-    .attr("transform", "translate(0," + yMax + ")")
-    .call(d3.axisBottom(x));
-
-    // Y Axis
-    const y = d3.scaleLinear()
-    .domain([0, 500])
-    .range([ yMax, 0]);
-
-    svg.append("g")
-    .call(d3.axisLeft(y));
-
-    // Dots
-    svg.append('g')
-    .selectAll("dot")
-    .data(data).enter()
-    .append("circle")
-    .attr("cx", function (d) { return d[0] } )
-    .attr("cy", function (d) { return d[1] } )
-    .attr("r", 3)
-    .style("fill", "Red");
   </script>
 </body>
 </html>
