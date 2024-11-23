@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News API Example</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script>
 </head>
 <body>
   <h1>News Search</h1>
@@ -11,18 +12,19 @@
   <button id="searchButton">Search</button>
   <div id="results"></div>
 
+  <div id="myPlot"></div> 
+
   <script>
     // Base URL and endpoint for NewsAPI
     const BASE_URL = "https://newsapi.org/";
     const ENDPOINT = "v2/everything";
     const API_KEY = "4debf998c9b64761bcfbfe9ca7997ef5"; // Replace with your API key
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
     // Function to fetch news articles
     async function fetchNews(query) {
       try {
-        const url = `${proxyUrl}${BASE_URL}${ENDPOINT}?q=${encodeURIComponent(query)}&apiKey=${API_KEY}`;
-        const response = await fetch(url, { referrerPolicy: 'no-referrer' });
+        const url = `${BASE_URL}${ENDPOINT}?q=${encodeURIComponent(query)}&apiKey=${API_KEY}`;
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -52,6 +54,16 @@
       });
     }
 
+    // dummy data from json
+    fetch("dummy.json")
+        .then(response => {
+            return response.json();
+        }
+        )
+        .then(data => {
+            console.log(data);
+        })
+
     // Event listener for search button
     document.getElementById("searchButton").addEventListener("click", () => {
       const query = document.getElementById("query").value;
@@ -61,6 +73,55 @@
       }
       fetchNews(query);
     });
+
+    // Set Dimensions
+    const xSize = 500;
+    const ySize = 500;
+    const margin = 40;
+    const xMax = xSize - margin*2;
+    const yMax = ySize - margin*2;
+
+    // Create Random Points
+    const numPoints = 100;
+    const data = [];
+    for (let i = 0; i < numPoints; i++) {
+    data.push([Math.random() * xMax, Math.random() * yMax]);
+    }
+
+    // Append SVG Object to the Page
+    const svg = d3.select("#myPlot")
+    .append("svg")
+    .attr("height", "1500px")
+    .attr("width", "1500px")
+    .append("g")
+    .attr("transform","translate(" + margin + "," + margin + ")");
+
+    // X Axis
+    const x = d3.scaleLinear()
+    .domain([0, 500])
+    .range([0, xMax]);
+
+    svg.append("g")
+    .attr("transform", "translate(0," + yMax + ")")
+    .call(d3.axisBottom(x));
+
+    // Y Axis
+    const y = d3.scaleLinear()
+    .domain([0, 500])
+    .range([ yMax, 0]);
+
+    svg.append("g")
+    .call(d3.axisLeft(y));
+
+    // Dots
+    svg.append('g')
+    .selectAll("dot")
+    .data(data).enter()
+    .append("circle")
+    .attr("cx", function (d) { return d[0] } )
+    .attr("cy", function (d) { return d[1] } )
+    .attr("r", 3)
+    .style("fill", "Red");
   </script>
 </body>
 </html>

@@ -1,0 +1,195 @@
+{
+    "usersbydepartment" : [
+        {
+            "user_count" : 1234,
+            "department_name" : "test department",
+            "department_id" : "D1234"
+        }
+    ],
+    "usersbyproject" : [
+        {
+            "project_name" : "test project",
+            "project_code" : "P1234",
+            "user_count" : 1234
+        }
+    ],
+    "filesbydepartment" : [
+        {
+            "department_name" : "test department",
+            "department_id" : "D1234",
+            "file_count" : 1234
+        }
+    ],
+    "filesbyproject" : [
+        {
+            "project_name" : "test project",
+            "project_code" : "P1234",
+            "file_count" : 1234
+        }
+    ],
+    "filesbyuser" : [
+        {
+            "epid" : "test epid",
+            "user_name_ko" : "홍길동",
+            "user_name_en" : "Hong Gil Dong",
+            "knox_id" : "gd.hong",
+            "file_count" : 1234
+        }
+    ],
+    "filesbyuserwithdepartment" : [
+        {
+            "department_name" : "test department",
+            "department_id" : "D1234",
+            "epid" : "test epid",
+            "user_name_ko" : "홍길동",
+            "user_name_en" : "Hong Gil Dong",
+            "knox_id" : "gd.hong",
+            "file_count" : 1234
+        }
+    ],
+    "filesbyuserwithproject" : [
+        {
+            "project_name" : "test project",
+            "project_code" : "P1234",
+            "epid" :"test epid",
+            "user_name_ko" : "홍길동",
+            "user_name_en" :"Hong Gil Dong",
+            "knox_id" : "gd.hong",
+            "file_count" : 1234
+        }
+    ],
+    "filesbyfileid" : [
+        {
+            "file_id" : "test fileid",
+            "download_count" : 1234
+        }
+    ],
+    "downloadsbyweeks" : [
+        {
+            "download_count": 1234,
+            "year_week": "2024W1"
+        },
+        {
+            "download_count": 1244,
+            "year_week": "2024W2"
+        },
+        {
+            "download_count": 1254,
+            "year_week": "2024W3"
+        },
+        {
+            "download_count": 1264,
+            "year_week": "2024W4"
+        },
+        {
+            "download_count": 1274,
+            "year_week": "2024W5"
+        },
+        {
+            "download_count": 1284,
+            "year_week": "2024W6"
+        },
+        {
+            "download_count": 1294,
+            "year_week": "2024W7"
+        },
+        {
+            "download_count": 1304,
+            "year_week": "2024W8"
+        },
+        {
+            "download_count": 1314,
+            "year_week": "2024W9"
+        },
+        {
+            "download_count": 1324,
+            "year_week": "2024W10"
+        },
+        {
+            "download_count": 1334,
+            "year_week": "2024W11"
+        },
+        {
+            "download_count": 1344,
+            "year_week": "2024W12"
+        },
+        {
+            "download_count": 1354,
+            "year_week": "2024W13"
+        },
+        {
+            "download_count": 1364,
+            "year_week": "2024W14"
+        },
+        {
+            "download_count": 1374,
+            "year_week": "2024W15"
+        },
+        {
+            "download_count": 1384,
+            "year_week": "2024W16"
+        },
+        {
+            "download_count": 1394,
+            "year_week": "2024W17"
+        },
+        {
+            "download_count": 1404,
+            "year_week": "2024W18"
+        },
+        {
+            "download_count": 1414,
+            "year_week": "2024W19"
+        },
+        {
+            "download_count": 1424,
+            "year_week": "2024W20"
+        },
+        {
+            "download_count": 1434,
+            "year_week": "2024W21"
+        },
+        {
+            "download_count": 1444,
+            "year_week": "2024W22"
+        },
+        {
+            "download_count": 1454,
+            "year_week": "2024W23"
+        },
+        {
+            "download_count": 1464,
+            "year_week": "2024W24"
+        },
+        {
+            "download_count": 1474,
+            "year_week": "2024W25"
+        },
+        {
+            "download_count": 1484,
+            "year_week": "2024W26"
+        },
+        {
+            "download_count": 1494,
+            "year_week": "2024W27"
+        },
+        {
+            "download_count": 1504,
+            "year_week": "2024W28"
+        },
+        {
+            "download_count": 1514,
+            "year_week": "2024W29"
+        },
+        {
+            "download_count": 1524,
+            "year_week": "2024W30"
+        }
+    ],
+    "filesbyweeks" : [
+        {
+            "file_count" : 1234,
+            "year_week" : "2024W12"
+        }
+    ]
+}
