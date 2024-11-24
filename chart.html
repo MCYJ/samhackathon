@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RDM Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -234,6 +236,7 @@
                     aspectRatio: 1,
                     plugins: {
                         legend: {
+                            display: true,
                             position: "top"
                         },
                         title: {
@@ -249,8 +252,21 @@
                                 }
                             }
                         }
+                    },
+                    datalabels: {
+                        display: true, // Always show labels
+                        color: "white", // Label text color
+                        font: {
+                            size: 14, // Label font size
+                            weight: "bold"
+                        },
+                        formatter: (value, context) => {
+                            const label = context.chart.data.labels[context.dataIndex];
+                            return `${label}: ${value.toLocaleString()} files`;
+                        }
                     }
-                }
+                },
+                plugins: [ChartDataLabels]
             });
         }
     </script>
