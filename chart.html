@@ -3,68 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>RDM Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+
+        #chart-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+    </style>
 </head>
 <body>
+    <h1>RDM Dashboard</h1>
+    <div id="chart-container">
+        <canvas id="downloadsByWeeks"></canvas>
+    </div>
+
     <script>
-        class chart = {
-            // Declare the chart dimensions and margins.
-            const width = 928;
-            const height = 500;
-            const marginTop = 30;
-            const marginRight = 0;
-            const marginBottom = 30;
-            const marginLeft = 40;
-
-            // Declare the x (horizontal position) scale.
-            const x = d3.scaleBand()
-                .domain(d3.groupSort(data, ([d]) => -d.frequency, (d) => d.letter)) // descending frequency
-                .range([marginLeft, width - marginRight])
-                .padding(0.1);
-            
-            // Declare the y (vertical position) scale.
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(data, (d) => d.frequency)])
-                .range([height - marginBottom, marginTop]);
-
-            // Create the SVG container.
-            const svg = d3.create("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("viewBox", [0, 0, width, height])
-                .attr("style", "max-width: 100%; height: auto;");
-
-            // Add a rect for each bar.
-            svg.append("g")
-                .attr("fill", "steelblue")
-                .selectAll()
-                .data(data)
-                .join("rect")
-                .attr("x", (d) => x(d.letter))
-                .attr("y", (d) => y(d.frequency))
-                .attr("height", (d) => y(0) - y(d.frequency))
-                .attr("width", x.bandwidth());
-
-            // Add the x-axis and label.
-            svg.append("g")
-                .attr("transform", `translate(0,${height - marginBottom})`)
-                .call(d3.axisBottom(x).tickSizeOuter(0));
-
-            // Add the y-axis and label, and remove the domain line.
-            svg.append("g")
-                .attr("transform", `translate(${marginLeft},0)`)
-                .call(d3.axisLeft(y).tickFormat((y) => (y * 100).toFixed()))
-                .call(g => g.select(".domain").remove())
-                .call(g => g.append("text")
-                    .attr("x", -marginLeft)
-                    .attr("y", 10)
-                    .attr("fill", "currentColor")
-                    .attr("text-anchor", "start")
-                    .text("↑ Frequency (%)"));
-
-            // Return the SVG element.
-            return svg.node();
+        // dummy data from json
+        fetch("dummy.json")
+        .then(response => {
+            return response.json();
         }
+        )
+        .then(data => {
+            renderDownloadsByWeeks(data);
+            console.log(data["downloadsbyweeks"].map(item => item.download_count));
+        })
+
+        function renderDownloadsByWeeks (rawdata) {
+            const ctx = document.getElementById('downloadsByWeeks').getContext('2d');
+
+            const labels = rawdata["downloadsbyweeks"].map(item => item.year_week);
+            const data = rawdata["downloadsbyweeks"].map(item => item.download_count);
+
+            const myBarChart = new Chart(ctx, {
+                type: 'bar', // Ensure chart type is 'bar'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Download Counts',
+                        data: data,
+                        backgroundColor: ['#2a9d8f', '#e76f51', '#f4a261', '#264653', '#1d3557'], // Debug with fixed colors
+                        borderColor: '#333',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Download Counts per Week',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Download Counts'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
     </script>
 </body>
 </html>
