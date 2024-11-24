@@ -61,7 +61,7 @@
         }
         )
         .then(data => {
-            renderBarChart(data);
+            renderDownloadsByWeeks(data);
             console.log(data["downloadsbyweeks"].map(item => item.download_count));
         })
 
@@ -124,7 +124,7 @@
     // .attr("r", 3)
     // .style("fill", "Red");
 
-    function renderBarChart(rawdata) {
+    function renderDownloadsByWeeks(rawdata) {
         data = rawdata['downloadsbyweeks']
 
         // Dimensions and margins

@@ -188,8 +188,124 @@
     ],
     "filesbyweeks" : [
         {
-            "file_count" : 1234,
-            "year_week" : "2024W12"
+            "file_count": 143,
+            "year_week": "2024W1"
+        },
+        {
+            "file_count": 1231,
+            "year_week": "2024W2"
+        },
+        {
+            "file_count": 681,
+            "year_week": "2024W3"
+        },
+        {
+            "file_count": 1216,
+            "year_week": "2024W4"
+        },
+        {
+            "file_count": 1016,
+            "year_week": "2024W5"
+        },
+        {
+            "file_count": 340,
+            "year_week": "2024W6"
+        },
+        {
+            "file_count": 1514,
+            "year_week": "2024W7"
+        },
+        {
+            "file_count": 642,
+            "year_week": "2024W8"
+        },
+        {
+            "file_count": 1975,
+            "year_week": "2024W9"
+        },
+        {
+            "file_count": 818,
+            "year_week": "2024W10"
+        },
+        {
+            "file_count": 1518,
+            "year_week": "2024W11"
+        },
+        {
+            "file_count": 1928,
+            "year_week": "2024W12"
+        },
+        {
+            "file_count": 1685,
+            "year_week": "2024W13"
+        },
+        {
+            "file_count": 1809,
+            "year_week": "2024W14"
+        },
+        {
+            "file_count": 1096,
+            "year_week": "2024W15"
+        },
+        {
+            "file_count": 1354,
+            "year_week": "2024W16"
+        },
+        {
+            "file_count": 1918,
+            "year_week": "2024W17"
+        },
+        {
+            "file_count": 1667,
+            "year_week": "2024W18"
+        },
+        {
+            "file_count": 181,
+            "year_week": "2024W19"
+        },
+        {
+            "file_count": 1134,
+            "year_week": "2024W20"
+        },
+        {
+            "file_count": 1852,
+            "year_week": "2024W21"
+        },
+        {
+            "file_count": 1432,
+            "year_week": "2024W22"
+        },
+        {
+            "file_count": 705,
+            "year_week": "2024W23"
+        },
+        {
+            "file_count": 1062,
+            "year_week": "2024W24"
+        },
+        {
+            "file_count": 1505,
+            "year_week": "2024W25"
+        },
+        {
+            "file_count": 137,
+            "year_week": "2024W26"
+        },
+        {
+            "file_count": 1854,
+            "year_week": "2024W27"
+        },
+        {
+            "file_count": 390,
+            "year_week": "2024W28"
+        },
+        {
+            "file_count": 738,
+            "year_week": "2024W29"
+        },
+        {
+            "file_count": 1483,
+            "year_week": "2024W30"
         }
     ]
 }

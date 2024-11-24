@@ -29,9 +29,10 @@
     </style>
 </head>
 <body>
-    <h1>RDM Dashboard</h1>
+    <h1>RDM (Raw Data Mart) Dashboard</h1>
     <div id="chart-container">
         <canvas id="downloadsByWeeks"></canvas>
+        <canvas id="filesByWeeks"></canvas>
     </div>
 
     <script>
@@ -43,6 +44,7 @@
         )
         .then(data => {
             renderDownloadsByWeeks(data);
+            renderFilesByWeeks(data);
             console.log(data["downloadsbyweeks"].map(item => item.download_count));
         })
 
@@ -103,6 +105,62 @@
             });
         }
         
+        function renderFilesByWeeks(rawdata) {
+            const ctx = document.getElementById('filesByWeeks').getContext('2d');
+
+            const labels = rawdata["filesbyweeks"].map(item => item.year_week);
+            const data = rawdata["filesbyweeks"].map(item => item.file_count);
+
+            const myBarChart = new Chart(ctx, {
+                type: 'bar', // Ensure chart type is 'bar'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Upload Counts',
+                        data: data,
+                        backgroundColor: ['#2a9d8f', '#e76f51', '#f4a261', '#264653', '#1d3557'], // Debug with fixed colors
+                        borderColor: '#333',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Upload Counts per Week',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Upload Counts'
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
