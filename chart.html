@@ -13,7 +13,7 @@
         }
 
         #chart-container {
-            width: 80%;
+            width: 100%;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -24,29 +24,38 @@
 
         canvas {
             width: 100% !important;
-            height: 400px !important;
+            height: 100% !important;
         }
     </style>
 </head>
 <body>
     <h1>RDM (Raw Data Mart) Dashboard</h1>
+    <h3></h3>
     <div id="chart-container">
         <canvas id="downloadsByWeeks"></canvas>
         <canvas id="filesByWeeks"></canvas>
+        <canvas id="filesByUserWithProject" style="width: 100%; height: 100%"></canvas>
     </div>
 
     <script>
-        // dummy data from json
-        fetch("dummy.json")
-        .then(response => {
-            return response.json();
+        loadData();
+
+        function loadData() {
+            // dummy data from json
+            fetch("dummy.json")
+            .then(response => {
+                return response.json();
+            }
+            )
+            .then(data => {
+                renderDownloadsByWeeks(data);
+                renderFilesByWeeks(data);
+                renderFilesByUserWithProject(data);
+
+                console.log(data["downloadsbyweeks"].map(item => item.download_count));
+            })
         }
-        )
-        .then(data => {
-            renderDownloadsByWeeks(data);
-            renderFilesByWeeks(data);
-            console.log(data["downloadsbyweeks"].map(item => item.download_count));
-        })
+        
 
         function renderDownloadsByWeeks (rawdata) {
             const ctx = document.getElementById('downloadsByWeeks').getContext('2d');
@@ -155,6 +164,89 @@
                             title: {
                                 display: true,
                                 text: 'Upload Counts'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderFilesByUserWithProject(rawdata){
+            rawdata = rawdata["filesbyuserwithproject"];
+            // Sample Data (from JSON)
+            const data = [
+                { user_name_ko: "홍길동1", file_count: 1500 },
+                { user_name_ko: "홍길동2", file_count: 1400 },
+                { user_name_ko: "홍길동3", file_count: 1300 },
+                { user_name_ko: "홍길동4", file_count: 1200 },
+                { user_name_ko: "홍길동5", file_count: 1100 },
+                { user_name_ko: "홍길동6", file_count: 1000 },
+                { user_name_ko: "홍길동7", file_count: 900 },
+                { user_name_ko: "홍길동8", file_count: 800 }
+            ];
+
+            // Step 1: Sort Data by file_count
+            const sortedData = rawdata.sort((a, b) => b.file_count - a.file_count);
+
+            // Step 2: Extract Top 5 and Others
+            const top5 = sortedData.slice(0, 5);
+            const others = sortedData.slice(5);
+
+            // Step 3: Aggregate Data
+            const labels = top5.map(item => item.user_name_ko);
+            const dataPoints = top5.map(item => item.file_count);
+
+            const othersTotal = others.reduce((sum, item) => sum + item.file_count, 0);
+            labels.push("기타"); // Add "Others" label
+            dataPoints.push(othersTotal); // Add aggregated count
+
+            // Step 4: Render Chart
+            const ctx = document.getElementById("filesByUserWithProject").getContext("2d");
+            const doughnutChart = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dataPoints,
+                            backgroundColor: [
+                                "#FF6384", // Colors for each section
+                                "#36A2EB",
+                                "#FFCE56",
+                                "#4BC0C0",
+                                "#9966FF",
+                                "#C9CBCF" // Color for "기타"
+                            ],
+                            hoverBackgroundColor: [
+                                "#FF6384",
+                                "#36A2EB",
+                                "#FFCE56",
+                                "#4BC0C0",
+                                "#9966FF",
+                                "#C9CBCF"
+                            ]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1,
+                    plugins: {
+                        legend: {
+                            position: "top"
+                        },
+                        title: {
+                            display: true,
+                            text: "Top 5 Users and Others"
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const label = tooltipItem.label || "";
+                                    const value = tooltipItem.raw || 0;
+                                    return `${label}: ${value.toLocaleString()} files`;
+                                }
                             }
                         }
                     }
